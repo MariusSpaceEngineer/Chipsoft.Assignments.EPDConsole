@@ -1,5 +1,6 @@
 ﻿using Chipsoft.Assignments.EPDConsole.Models;
 using Chipsoft.Assignments.EPDConsole.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chipsoft.Assignments.EPDConsole.Repositories
 {
@@ -19,7 +20,10 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
 
         public IEnumerable<Appointment> GetAllAppointments()
         {
-           return _context.Appointments.ToList();
+            return _context.Appointments
+                            .Include(a => a.Patient)
+                            .Include(a => a.Physician)
+                            .ToList();
         }
     }
 }

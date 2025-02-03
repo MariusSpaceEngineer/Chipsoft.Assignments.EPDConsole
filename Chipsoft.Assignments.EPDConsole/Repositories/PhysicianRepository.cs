@@ -17,9 +17,25 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Patient> GetAllPhysicians()
+        public void DeletePhysician(int id)
         {
-            return _context.Patients.ToList();
+            _context.Physicians.Remove(GetPhysicianById(id));
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<Physician> GetAllPhysicians()
+        {
+            return _context.Physicians.ToList();
+        }
+
+        public Physician GetPhysicianById(int id)
+        {
+            return _context.Physicians.FirstOrDefault(p => p.Id == id);
+        }
+
+        public Physician GetPhysicianByNameAndSpecialization(string name, string specialization)
+        {
+            return _context.Physicians.FirstOrDefault(p => p.Name == name && p.Specialization == specialization);
         }
     }
 }
