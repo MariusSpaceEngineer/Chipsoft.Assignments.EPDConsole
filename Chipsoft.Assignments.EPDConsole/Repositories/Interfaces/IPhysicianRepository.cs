@@ -5,6 +5,6 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories.Interfaces
     internal interface IPhysicianRepository
     {
         void AddPhysician(Physician physician);
-        IEnumerable<Patient> GetAllPhysicians();
+        IEnumerable<Physician> GetAllPhysicians();
     }
 }
