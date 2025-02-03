@@ -5,6 +5,7 @@ namespace Chipsoft.Assignments.EPDConsole.Services.Interfaces
     public interface IPhysicianService
     {
         void AddPhysician(Physician physician);
+        void DeletePhysician(int id);
         IEnumerable<Physician> GetAllPhysicians();
     }
 }

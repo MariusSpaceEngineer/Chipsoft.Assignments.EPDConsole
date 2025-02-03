@@ -6,5 +6,6 @@ namespace Chipsoft.Assignments.EPDConsole.Services.Interfaces
     {
         void AddPatient(Patient patient);
         IEnumerable<Patient> GetAllPatients();
+        void DeletePatient(int id);
     }
 }
