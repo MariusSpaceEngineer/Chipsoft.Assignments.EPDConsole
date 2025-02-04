@@ -2,11 +2,24 @@
 
 public static class ConsoleHelper
 {
+    private const string CancelMessage = "Typ 'X' om terug naar de hoofmenu te gaan";
+    private const string WrongInput = "Ongeldige invoer. Probeer het opnieuw.";
+
     private static void DisplayErrorMessage(string message)
     {
         Console.WriteLine(message);
         Console.WriteLine("Druk op een toets om opnieuw te proberen...");
         Console.ReadKey();
+    }
+
+    // Checks if the input is "X" to cancel the operation.
+    private static bool CheckForCancellation(string input)
+    {
+        if (input?.ToUpper() == "X")
+        {
+            return true;
+        }
+        return false;
     }
 
     // Prompts the user for a string input.
@@ -16,16 +29,20 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Clear();
-            Console.WriteLine(prompt);
+            Console.WriteLine($"{prompt} ({CancelMessage})");
             var input = Console.ReadLine()?.Trim();
 
-            if (isOptional || !string.IsNullOrWhiteSpace(input))
+            if (CheckForCancellation(input))
+            {
+                return default;
+            }
+            else if (isOptional || !string.IsNullOrWhiteSpace(input))
             {
                 return input;
             }
             else
             {
-                DisplayErrorMessage("Ongeldige invoer. Probeer het opnieuw.");
+                DisplayErrorMessage(WrongInput);
             }
         }
     }
@@ -36,10 +53,14 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Clear();
-            Console.WriteLine(prompt);
+            Console.WriteLine($"{prompt} ({CancelMessage})");
             var input = Console.ReadLine()?.Trim();
 
-            if (!string.IsNullOrWhiteSpace(input) && validate(input))
+            if (CheckForCancellation(input))
+            {
+                return default;
+            }
+            else if (!string.IsNullOrWhiteSpace(input) && validate(input))
             {
                 return input;
             }
@@ -57,7 +78,7 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Clear();
-            Console.WriteLine(prompt);
+            Console.WriteLine($"{prompt} ({CancelMessage})");
 
             for (int i = 0; i < items.Count; i++)
             {
@@ -66,24 +87,18 @@ public static class ConsoleHelper
                 Console.WriteLine($"{i + 1} - {details}");
             }
 
-            var keyInfo = Console.ReadKey(intercept: true);
-            if (keyInfo.Key == ConsoleKey.Escape)
+            var input = Console.ReadLine()?.Trim();
+            if (CheckForCancellation(input))
             {
-                // Return default (null) to indicate cancellation.
                 return default;
+            }
+            else if (IsValidSelection(input, items.Count, out int index))
+            {
+                return items[index - 1];
             }
             else
             {
-                // Combine the first pressed key with the rest of the input.
-                string input = keyInfo.KeyChar + Console.ReadLine();
-                if (IsValidSelection(input, items.Count, out int index))
-                {
-                    return items[index - 1];
-                }
-                else
-                {
-                    DisplayErrorMessage("Ongeldige invoer. Probeer het opnieuw.");
-                }
+                DisplayErrorMessage(WrongInput);
             }
         }
     }
@@ -99,14 +114,20 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Clear();
-            Console.WriteLine(prompt);
-            if (int.TryParse(Console.ReadLine(), out int value))
+            Console.WriteLine($"{prompt} ({CancelMessage})");
+            var input = Console.ReadLine()?.Trim();
+
+            if (CheckForCancellation(input))
+            {
+                return default;
+            }
+            else if (int.TryParse(input, out int value))
             {
                 return value;
             }
             else
             {
-                DisplayErrorMessage("Ongeldig getal. Probeer het opnieuw.");
+                DisplayErrorMessage(WrongInput);
             }
         }
     }
@@ -118,10 +139,14 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Clear();
-            Console.WriteLine(prompt);
-            var input = Console.ReadLine();
+            Console.WriteLine($"{prompt} ({CancelMessage})");
+            var input = Console.ReadLine()?.Trim();
 
-            if (DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+            if (CheckForCancellation(input))
+            {
+                return default;
+            }
+            else if (DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
             {
                 if (mustBeFuture && date <= DateTime.Now)
                 {
@@ -132,7 +157,7 @@ public static class ConsoleHelper
             }
             else
             {
-                DisplayErrorMessage("Ongeldige datum. Probeer het opnieuw.");
+                DisplayErrorMessage(WrongInput);
             }
         }
     }
