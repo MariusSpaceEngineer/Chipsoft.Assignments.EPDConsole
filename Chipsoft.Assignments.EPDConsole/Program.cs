@@ -36,6 +36,7 @@ namespace Chipsoft.Assignments.EPDConsole
             Console.WriteLine("6 - Afspraken inzien");
             Console.WriteLine("7 - Sluiten");
             Console.WriteLine("8 - Reset db");
+            Console.WriteLine("9 - Bekijk afspraken voor patiënt of arts");
 
             if (int.TryParse(Console.ReadLine(), out int option))
             {
@@ -64,6 +65,9 @@ namespace Chipsoft.Assignments.EPDConsole
                     case 8:
                         ResetDatabase();
                         return true;
+                    case 9:
+                        ShowAppointmentsForUser();
+                        return true;
                     default:
                         return true;
                 }
@@ -91,8 +95,8 @@ namespace Chipsoft.Assignments.EPDConsole
             try
             {
                 string name = ConsoleHelper.GetValidatedInput(
-                    "Voer de naam van de patiënt in:", 
-                    ValidationHelper.IsValidName, 
+                    "Voer de naam van de patiënt in:",
+                    ValidationHelper.IsValidName,
                     "Ongeldige invoer. Voer een geldig naam in.");
                 string address = ConsoleHelper.GetStringInput("Voer het adres van de patiënt in:");
                 string phoneNumber = ConsoleHelper.GetValidatedInput(
@@ -128,7 +132,7 @@ namespace Chipsoft.Assignments.EPDConsole
                 Console.WriteLine($"Er is een onverwachte fout opgetreden.");
             }
 
-            PromptToContinue();
+            ConsoleHelper.PromptToContinue();
         }
 
         private void AddPhysician()
@@ -164,7 +168,7 @@ namespace Chipsoft.Assignments.EPDConsole
                 Console.WriteLine($"Er is een onverwachte fout opgetreden.");
             }
 
-            PromptToContinue();
+            ConsoleHelper.PromptToContinue();
         }
 
         private void AddAppointment()
@@ -174,8 +178,8 @@ namespace Chipsoft.Assignments.EPDConsole
                 var patients = _patientService.GetAllPatients().ToList();
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
-                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name);
-                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name);
+                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
+                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name, p => p.Specialization);
                 DateTime appointmentDate = ConsoleHelper.GetDateInput("Voer de datum van de afspraak in (dd/MM/yyyy HH:mm):", "dd/MM/yyyy HH:mm", true);
                 string description = ConsoleHelper.GetStringInput("Voer een beschrijving van de afspraak in:", true);
 
@@ -199,7 +203,7 @@ namespace Chipsoft.Assignments.EPDConsole
                 Console.WriteLine($"Er is een onverwachte fout opgetreden.");
             }
 
-            PromptToContinue();
+            ConsoleHelper.PromptToContinue();
         }
 
         private void DeletePhysician()
@@ -207,7 +211,7 @@ namespace Chipsoft.Assignments.EPDConsole
             try
             {
                 var physicians = _physicianService.GetAllPhysicians().ToList();
-                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen:", physicians, p => p.Name);
+                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen:", physicians, p => p.Name, p => p.Specialization);
 
                 _physicianService.DeletePhysician(selectedPhysician.Id);
                 Console.WriteLine("Arts succesvol verwijderd.");
@@ -221,7 +225,7 @@ namespace Chipsoft.Assignments.EPDConsole
                 Console.WriteLine($"Er is een onverwachte fout opgetreden.");
             }
 
-            PromptToContinue();
+            ConsoleHelper.PromptToContinue();
         }
 
         private void DeletePatient()
@@ -229,7 +233,7 @@ namespace Chipsoft.Assignments.EPDConsole
             try
             {
                 var patients = _patientService.GetAllPatients().ToList();
-                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen:", patients, p => p.Name);
+                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
 
                 _patientService.DeletePatient(selectedPatient.Id);
                 Console.WriteLine("Patiënt succesvol verwijderd.");
@@ -243,23 +247,63 @@ namespace Chipsoft.Assignments.EPDConsole
                 Console.WriteLine($"Er is een onverwachte fout opgetreden.");
             }
 
-            PromptToContinue();
+            ConsoleHelper.PromptToContinue();
         }
 
         private void ShowAppointments()
         {
             var appointments = _appointmentService.GetAllAppointments();
 
-            Console.Clear();
-            Console.WriteLine("Afspraken:");
-            foreach (var appointment in appointments)
+            ConsoleHelper.ShowAppointmentDetails(appointments, "Afspraken:");
+
+            ConsoleHelper.PromptToContinue();
+        }
+
+        private void ShowAppointmentsForUser()
+        {
+            Console.WriteLine("Bent u een patiënt of een arts?");
+            Console.WriteLine("1 - Patiënt");
+            Console.WriteLine("2 - Arts");
+
+            if (int.TryParse(Console.ReadLine(), out int option))
             {
-                Console.WriteLine($"Patiënt: {appointment.Patient.Name} - Arts: {appointment.Physician.Name} - Datum: {appointment.Date}");
+                switch (option)
+                {
+                    case 1:
+                        ShowAppointmentsForPatient();
+                        break;
+                    case 2:
+                        ShowAppointmentsForPhysician();
+                        break;
+                    default:
+                        Console.WriteLine("Ongeldige optie.");
+                        break;
+                }
             }
 
-            Console.WriteLine("");
-            PromptToContinue();
+            ConsoleHelper.PromptToContinue();
         }
+
+        private void ShowAppointmentsForPatient()
+        {
+            var patients = _patientService.GetAllPatients().ToList();
+            Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
+
+            var appointments = _appointmentService.GetAppointmentsByPatientId(selectedPatient.Id);
+
+            ConsoleHelper.ShowAppointmentDetails(appointments, $"Afspraken voor patiënt {selectedPatient.Name}:");
+        }
+
+        private void ShowAppointmentsForPhysician()
+        {
+            var physicians = _physicianService.GetAllPhysicians().ToList();
+            Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name, p => p.Specialization);
+
+            var appointments = _appointmentService.GetAppointmentsByPhysicianId(selectedPhysician.Id);
+
+            ConsoleHelper.ShowAppointmentDetails(appointments, $"Afspraken voor arts {selectedPhysician.Name}:");
+        }
+
 
         private void ResetDatabase()
         {
@@ -277,14 +321,8 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 Console.WriteLine($"Fout bij het resetten van de database.");
             }
-
-            PromptToContinue();
-        }
-
-        private void PromptToContinue()
-        {
-            Console.WriteLine("Druk op een toets om terug te keren naar het menu...");
-            Console.ReadKey();
+            
+            ConsoleHelper.PromptToContinue();
         }
     }
 }
