@@ -47,15 +47,17 @@ public static class ConsoleHelper
         }
     }
 
-    public static T GetSelectionInput<T>(string prompt, List<T> items, Func<T, string> display)
+    public static T GetSelectionInput<T>(string prompt, List<T> items, params Func<T, string>[] displayFunctions)
     {
         while (true)
         {
             Console.Clear();
             Console.WriteLine(prompt);
+
             for (int i = 0; i < items.Count; i++)
             {
-                Console.WriteLine($"{i + 1} - {display(items[i])}");
+                string details = string.Join(" - ", displayFunctions.Select(func => func(items[i])));
+                Console.WriteLine($"{i + 1} - {details}");
             }
 
             if (int.TryParse(Console.ReadLine(), out int index) && index >= 1 && index <= items.Count)
@@ -132,5 +134,22 @@ public static class ConsoleHelper
                 DisplayErrorMessage("Voer 'J' of 'N' in.");
             }
         }
+    }
+
+    public static void ShowAppointmentDetails(IEnumerable<Appointment> appointments, string title)
+    {
+        Console.Clear();
+        Console.WriteLine(title);
+        foreach (var appointment in appointments)
+        {
+            Console.WriteLine($"Patiënt: {appointment.Patient.Name} - Arts: {appointment.Physician.Name} - Datum: {appointment.Date} - Beschrijving: {appointment.Description}");
+        }
+        Console.WriteLine("");
+    }
+
+    public static void PromptToContinue()
+    {
+        Console.WriteLine("Druk op een toets om terug te keren naar het menu...");
+        Console.ReadKey();
     }
 }
