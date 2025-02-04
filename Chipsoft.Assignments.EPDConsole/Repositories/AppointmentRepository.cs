@@ -12,13 +12,13 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
             _context = context;
         }
 
-        public void AddAppointment(Appointment appointment)
+        public void Add(Appointment appointment)
         {
             _context.Appointments.Add(appointment);
             _context.SaveChanges();
         }
 
-        public IEnumerable<Appointment> GetAllAppointments()
+        public IEnumerable<Appointment> GetAll()
         {
             return _context.Appointments
                             .Include(a => a.Patient)

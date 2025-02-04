@@ -1,11 +1,12 @@
 ﻿namespace Chipsoft.Assignments.EPDConsole.Repositories.Interfaces
 {
-    internal interface IPatientRepository
+    public interface IPatientRepository
     {
-        void AddPatient(Patient patient);
-        void DeletePatient(int id);
-        IEnumerable<Patient> GetAllPatients();
-        Patient GetPatientById(int id);
-        Patient GetPatientByNameAndPhoneNumber(string name, string phoneNumber);
+        void Add(Patient patient);
+        void Delete(int id);
+        IEnumerable<Patient> GetAll();
+        Patient GetById(int id);
+        bool Exists(int id);
+        Patient GetByNameAndPhoneNumber(string name, string phoneNumber);
     }
 }

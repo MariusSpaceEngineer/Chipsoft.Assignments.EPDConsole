@@ -10,31 +10,36 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
             _context = context;
         }
 
-        public void AddPatient(Patient patient)
+        public void Add(Patient patient)
         {
             _context.Patients.Add(patient);
             _context.SaveChanges();
         }
 
-        public void DeletePatient(int id)
+        public void Delete(int id)
         {
-            _context.Patients.Remove(GetPatientById(id));
+            _context.Patients.Remove(GetById(id));
             _context.SaveChanges();
         }
 
-        public IEnumerable<Patient> GetAllPatients()
+        public IEnumerable<Patient> GetAll()
         {
             return _context.Patients.ToList();
         }
 
-        public Patient GetPatientById(int id)
+        public Patient GetById(int id)
         {
             return _context.Patients.FirstOrDefault(p => p.Id == id);
         }
 
-        public Patient GetPatientByNameAndPhoneNumber(string name, string phoneNumber)
+        public Patient GetByNameAndPhoneNumber(string name, string phoneNumber)
         {
             return _context.Patients.FirstOrDefault(p => p.Name == name && p.PhoneNumber == phoneNumber);
+        }
+
+        public bool Exists(int id)
+        {
+            return _context.Patients.Any(p => p.Id == id);
         }
     }
 }
