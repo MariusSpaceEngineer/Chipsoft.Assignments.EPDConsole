@@ -17,6 +17,7 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
             _context.SaveChanges();
         }
 
+        //Get all appointments with patient and physician details
         public IEnumerable<Appointment> GetAll()
         {
             return _context.Appointments
@@ -25,6 +26,7 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
                             .ToList();
         }
 
+        //Get all appointments for a patient with patient and physician details
         public IEnumerable<Appointment> GetByPatientId(int patientId)
         {
             return _context.Appointments
@@ -34,6 +36,7 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
                             .ToList();
         }
 
+        //Get all appointments for a physician with patient and physician details
         public IEnumerable<Appointment> GetByPhysicianId(int physicianId)
         {
             return _context.Appointments

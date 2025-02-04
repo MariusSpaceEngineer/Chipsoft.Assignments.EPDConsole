@@ -77,6 +77,7 @@ namespace Chipsoft.Assignments.EPDConsole
 
         static void Main(string[] args)
         {
+            // Setup DI
             var serviceCollection = new ServiceCollection();
             var startup = new Startup();
             startup.ConfigureServices(serviceCollection);
@@ -94,6 +95,7 @@ namespace Chipsoft.Assignments.EPDConsole
         {
             try
             {
+                // Get patient details from user input and validate
                 string name = ConsoleHelper.GetValidatedInput(
                     "Voer de naam van de patiënt in:",
                     ValidationHelper.IsValidName,
@@ -139,6 +141,7 @@ namespace Chipsoft.Assignments.EPDConsole
         {
             try
             {
+                // Get physician details from user input and validate
                 string name = ConsoleHelper.GetValidatedInput(
                     "Voer de naam van de arts in:",
                     ValidationHelper.IsValidName,
@@ -178,9 +181,12 @@ namespace Chipsoft.Assignments.EPDConsole
                 var patients = _patientService.GetAllPatients().ToList();
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
+                // Get user selection for patient and physician
                 Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
                 Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name, p => p.Specialization);
+                // Get user date input for appointment
                 DateTime appointmentDate = ConsoleHelper.GetDateInput("Voer de datum van de afspraak in (dd/MM/yyyy HH:mm):", "dd/MM/yyyy HH:mm", true);
+                // Get user input for appointment description (optional)
                 string description = ConsoleHelper.GetStringInput("Voer een beschrijving van de afspraak in:", true);
 
                 var appointment = new Appointment
@@ -211,6 +217,7 @@ namespace Chipsoft.Assignments.EPDConsole
             try
             {
                 var physicians = _physicianService.GetAllPhysicians().ToList();
+
                 Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen:", physicians, p => p.Name, p => p.Specialization);
 
                 _physicianService.DeletePhysician(selectedPhysician.Id);
@@ -233,6 +240,7 @@ namespace Chipsoft.Assignments.EPDConsole
             try
             {
                 var patients = _patientService.GetAllPatients().ToList();
+
                 Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
 
                 _patientService.DeletePatient(selectedPatient.Id);
@@ -261,6 +269,7 @@ namespace Chipsoft.Assignments.EPDConsole
 
         private void ShowAppointmentsForUser()
         {
+            // Ask user if they are a patient or a physician
             Console.WriteLine("Bent u een patiënt of een arts?");
             Console.WriteLine("1 - Patiënt");
             Console.WriteLine("2 - Arts");
@@ -287,6 +296,7 @@ namespace Chipsoft.Assignments.EPDConsole
         private void ShowAppointmentsForPatient()
         {
             var patients = _patientService.GetAllPatients().ToList();
+
             Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
 
             var appointments = _appointmentService.GetAppointmentsByPatientId(selectedPatient.Id);
@@ -297,13 +307,13 @@ namespace Chipsoft.Assignments.EPDConsole
         private void ShowAppointmentsForPhysician()
         {
             var physicians = _physicianService.GetAllPhysicians().ToList();
+
             Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name, p => p.Specialization);
 
             var appointments = _appointmentService.GetAppointmentsByPhysicianId(selectedPhysician.Id);
 
             ConsoleHelper.ShowAppointmentDetails(appointments, $"Afspraken voor arts {selectedPhysician.Name}:");
         }
-
 
         private void ResetDatabase()
         {

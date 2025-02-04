@@ -16,10 +16,10 @@ public class Appointment
     public Physician Physician { get; set; }
 
     [Required]
-    [FutureDate(ErrorMessage = "Appointment date must be in the future.")]
+    [FutureDate(ErrorMessage = "De afspraakdatum moet in de toekomst liggen.")]
     public DateTime Date { get; set; }
 
-    [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters.")]
+    [StringLength(500, ErrorMessage = "Beschrijving mag niet langer zijn dan 500 tekens.")]
     public string Description { get; set; }
 }
 

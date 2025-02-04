@@ -24,6 +24,7 @@ public static class ValidationHelper
         return date > DateTime.Now;
     }
 
+    // Validate model using DataAnnotations
     public static void ValidateModel<T>(T model)
     {
         var validationResults = new List<ValidationResult>();

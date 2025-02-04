@@ -3,6 +3,6 @@
     public class NotFoundException : Exception
     {
         public NotFoundException(string entityName, int id)
-            : base($"{entityName} met ID {id} is niet gevonden.") { }
+              : base($"{entityName} with ID {id} was not found.") { }
     }
 }

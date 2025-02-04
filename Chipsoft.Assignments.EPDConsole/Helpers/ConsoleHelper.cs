@@ -9,6 +9,8 @@ public static class ConsoleHelper
         Console.ReadKey();
     }
 
+    // Prompts the user for a string input.
+    // If the input is optional, it allows empty input.
     public static string GetStringInput(string prompt, bool isOptional = false)
     {
         while (true)
@@ -28,6 +30,7 @@ public static class ConsoleHelper
         }
     }
 
+    //Checks to see if the input is not empty and if it is valid according to the validate function.
     public static string GetValidatedInput(string prompt, Func<string, bool> validate, string errorMessage = "Ongeldige invoer.")
     {
         while (true)
@@ -47,7 +50,9 @@ public static class ConsoleHelper
         }
     }
 
-    public static T GetSelectionInput<T>(string prompt, List<T> items, params Func<T, string>[] displayFunctions)
+    // Prompts the user to select an item from a list.
+    // The details of each item are displayed using the provided display function.
+    public static T GetSelectionInput<T>(string prompt, List<T> items, params Func<T, string>[] display)
     {
         while (true)
         {
@@ -56,7 +61,8 @@ public static class ConsoleHelper
 
             for (int i = 0; i < items.Count; i++)
             {
-                string details = string.Join(" - ", displayFunctions.Select(func => func(items[i])));
+                // Join the details of each item using a hyphen separator.
+                string details = string.Join(" - ", display.Select(func => func(items[i])));
                 Console.WriteLine($"{i + 1} - {details}");
             }
 
@@ -88,6 +94,8 @@ public static class ConsoleHelper
         }
     }
 
+    // Prompts the user for a date input.
+    // The date must be in the specified format and optionally in the future.
     public static DateTime GetDateInput(string prompt, string format, bool mustBeFuture = false)
     {
         while (true)
@@ -108,30 +116,6 @@ public static class ConsoleHelper
             else
             {
                 DisplayErrorMessage("Ongeldige datum. Probeer het opnieuw.");
-            }
-        }
-    }
-
-
-    public static bool GetBoolInput(string prompt)
-    {
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine($"{prompt} (J/N)");
-            var input = Console.ReadLine()?.Trim().ToLower();
-
-            if (input == "j")
-            {
-                return true;
-            }
-            else if (input == "n")
-            {
-                return false;
-            }
-            else
-            {
-                DisplayErrorMessage("Voer 'J' of 'N' in.");
             }
         }
     }

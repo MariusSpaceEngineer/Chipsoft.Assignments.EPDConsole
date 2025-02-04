@@ -3,6 +3,6 @@
     public class DuplicateEntityException : Exception
     {
         public DuplicateEntityException(string entityName)
-            : base($"Een {entityName} met dezelfde unieke gegevens bestaat al.") { }
+            : base($"An {entityName} with the same unique details already exists.") { }
     }
 }

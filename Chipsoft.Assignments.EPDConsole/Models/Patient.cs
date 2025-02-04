@@ -10,12 +10,12 @@ public class Patient
     [Required]
     public string Address { get; set; }
 
-    [Required(ErrorMessage = "Phone number is required.")]
-    [Phone(ErrorMessage = "Invalid phone number format.")]
+    [Required]
+    [Phone(ErrorMessage = "Ongeldig telefoonnummer formaat.")]
     public string PhoneNumber { get; set; }
 
-    [Required(ErrorMessage = "Email is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email address format.")]
+    [Required]
+    [EmailAddress(ErrorMessage = "Ongeldig e-mailadres formaat.")]
     public string Email { get; set; }
 
     public List<Appointment> Appointments { get; set; }
