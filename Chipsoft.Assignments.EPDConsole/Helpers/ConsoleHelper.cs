@@ -178,4 +178,17 @@ public static class ConsoleHelper
         Console.WriteLine("Druk op een toets om terug te keren naar het menu...");
         Console.ReadKey();
     }
+
+    // Checks if a list is empty and displays a message if it is.
+    public static bool CheckIfListIsEmpty<T>(List<T> list, string message)
+    {
+        if (!list.Any())
+        {
+            Console.Clear();
+            Console.WriteLine(message);
+            PromptToContinue();
+            return true;
+        }
+        return false;
+    }
 }

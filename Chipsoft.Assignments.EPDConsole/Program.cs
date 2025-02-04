@@ -278,6 +278,11 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
+                if (ConsoleHelper.CheckIfListIsEmpty(physicians, "Er zijn geen artsen om te verwijderen."))
+                {
+                    return;
+                }
+
                 Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen:",
                     physicians,
                     p => p.Name,
@@ -309,6 +314,11 @@ namespace Chipsoft.Assignments.EPDConsole
             try
             {
                 var patients = _patientService.GetAllPatients().ToList();
+
+                if (ConsoleHelper.CheckIfListIsEmpty(patients, "Er zijn geen patiënten om te verwijderen."))
+                {
+                    return;
+                }
 
                 Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen:",
                     patients,
@@ -377,6 +387,11 @@ namespace Chipsoft.Assignments.EPDConsole
         {
             var patients = _patientService.GetAllPatients().ToList();
 
+            if (ConsoleHelper.CheckIfListIsEmpty(patients, "Er zijn geen patiënten om afspraken voor te bekijken."))
+            {
+                return;
+            }
+
             Patient selectedPatient = ConsoleHelper.GetSelectionInput(
                 "Kies een patiënt:",
                 patients,
@@ -401,6 +416,11 @@ namespace Chipsoft.Assignments.EPDConsole
         private void ShowAppointmentsForPhysician()
         {
             var physicians = _physicianService.GetAllPhysicians().ToList();
+
+            if (ConsoleHelper.CheckIfListIsEmpty(physicians, "Er zijn geen artsen om afspraken voor te bekijken."))
+            {
+                return;
+            }
 
             Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:",
                 physicians,
@@ -438,6 +458,10 @@ namespace Chipsoft.Assignments.EPDConsole
 
             ConsoleHelper.PromptToContinue();
         }
+
+        
     }
 }
+
+
 
