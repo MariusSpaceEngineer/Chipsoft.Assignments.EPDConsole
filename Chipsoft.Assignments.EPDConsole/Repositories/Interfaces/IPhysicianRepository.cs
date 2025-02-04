@@ -2,7 +2,7 @@
 
 namespace Chipsoft.Assignments.EPDConsole.Repositories.Interfaces
 {
-    internal interface IPhysicianRepository
+    public interface IPhysicianRepository
     {
         void Add(Physician physician);
         void Delete(int id);

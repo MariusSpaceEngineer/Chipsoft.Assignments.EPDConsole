@@ -5,7 +5,7 @@ using Chipsoft.Assignments.EPDConsole.Services.Interfaces;
 
 namespace Chipsoft.Assignments.EPDConsole.Services
 {
-    internal class PhysicianService: IPhysicianService
+    public class PhysicianService: IPhysicianService
     {
         private readonly IPhysicianRepository _physicianRepository;
         public PhysicianService(IPhysicianRepository physicianRepository)
