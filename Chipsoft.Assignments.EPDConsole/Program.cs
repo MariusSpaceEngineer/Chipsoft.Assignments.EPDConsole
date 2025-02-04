@@ -100,15 +100,34 @@ namespace Chipsoft.Assignments.EPDConsole
                     "Voer de naam van de patiënt in:",
                     ValidationHelper.IsValidName,
                     "Ongeldige invoer. Voer een geldig naam in.");
+                if (name == null)
+                {
+                    return;
+                }
+
                 string address = ConsoleHelper.GetStringInput("Voer het adres van de patiënt in:");
+                if (address == null)
+                {
+                    return;
+                }
+
                 string phoneNumber = ConsoleHelper.GetValidatedInput(
                     "Voer het telefoonnummer van de patiënt in:",
                     ValidationHelper.IsValidPhoneNumber,
                     "Ongeldige invoer. Voer een geldig telefoonnummer in.");
+                if (phoneNumber == null)
+                {
+                    return;
+                }
+
                 string email = ConsoleHelper.GetValidatedInput(
                     "Voer het e-mailadres van de patiënt in:",
                     ValidationHelper.IsValidEmail,
                     "Ongeldige invoer. Voer een geldig e-mailadres in.");
+                if (email == null)
+                {
+                    return;
+                }
 
                 var patient = new Patient
                 {
@@ -147,7 +166,16 @@ namespace Chipsoft.Assignments.EPDConsole
                     ValidationHelper.IsValidName,
                     "Ongeldige invoer. Voer een geldig naam in."
                     );
+                if (name == null)
+                {
+                    return;
+                }
+
                 string specialization = ConsoleHelper.GetStringInput("Voer de specialisatie van de arts in:");
+                if (specialization == null)
+                {
+                    return;
+                }
 
                 var physician = new Physician
                 {
@@ -182,7 +210,7 @@ namespace Chipsoft.Assignments.EPDConsole
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
                 // Get user selection for patient and physician
-                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt: (druk op Escape om terug te keren naar het hoofdmenu)",
+                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:",
                     patients,
                     p => p.Name,
                     p => p.Address,
@@ -195,7 +223,7 @@ namespace Chipsoft.Assignments.EPDConsole
                     return;
                 }
 
-                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts: (druk op Escape om terug te keren naar het hoofdmenu)",
+                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:",
                     physicians,
                     p => p.Name,
                     p => p.Specialization
@@ -208,8 +236,17 @@ namespace Chipsoft.Assignments.EPDConsole
 
                 // Get user date input for appointment
                 DateTime appointmentDate = ConsoleHelper.GetDateInput("Voer de datum van de afspraak in (dd/MM/yyyy HH:mm):", "dd/MM/yyyy HH:mm", true);
+                if (appointmentDate == default)
+                {
+                    return;
+                }
+
                 // Get user input for appointment description (optional)
                 string description = ConsoleHelper.GetStringInput("Voer een beschrijving van de afspraak in:", true);
+                if (description == null)
+                {
+                    return;
+                }
 
                 var appointment = new Appointment
                 {
@@ -241,7 +278,7 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
-                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen (druk op Escape om terug te keren naar het hoofdmenu):",
+                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen:",
                     physicians,
                     p => p.Name,
                     p => p.Specialization
@@ -273,7 +310,7 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var patients = _patientService.GetAllPatients().ToList();
 
-                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen (druk op Escape om terug te keren naar het hoofdmenu):",
+                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen:",
                     patients,
                     p => p.Name,
                     p => p.Address,
@@ -313,6 +350,7 @@ namespace Chipsoft.Assignments.EPDConsole
         private void ShowAppointmentsForUser()
         {
             // Ask user if they are a patient or a physician
+            Console.Clear();
             Console.WriteLine("Bent u een patiënt of een arts?");
             Console.WriteLine("1 - Patiënt");
             Console.WriteLine("2 - Arts");
@@ -340,7 +378,7 @@ namespace Chipsoft.Assignments.EPDConsole
             var patients = _patientService.GetAllPatients().ToList();
 
             Patient selectedPatient = ConsoleHelper.GetSelectionInput(
-                "Kies een patiënt (druk op Escape om terug te keren naar het hoofdmenu):",
+                "Kies een patiënt:",
                 patients,
                 p => p.Name,
                 p => p.Address,
@@ -364,7 +402,7 @@ namespace Chipsoft.Assignments.EPDConsole
         {
             var physicians = _physicianService.GetAllPhysicians().ToList();
 
-            Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts (druk op Escape om terug te keren naar het hoofdmenu):",
+            Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:",
                 physicians,
                 p => p.Name,
                 p => p.Specialization
@@ -402,3 +440,4 @@ namespace Chipsoft.Assignments.EPDConsole
         }
     }
 }
+
