@@ -1,6 +1,6 @@
-﻿using Chipsoft.Assignments.EPDConsole.Repositories.Interfaces;
+﻿using Chipsoft.Assignments.EPDConsole.Exceptions;
+using Chipsoft.Assignments.EPDConsole.Repositories.Interfaces;
 using Chipsoft.Assignments.EPDConsole.Services.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace Chipsoft.Assignments.EPDConsole.Services
 {
@@ -19,35 +19,33 @@ namespace Chipsoft.Assignments.EPDConsole.Services
 
         public void AddAppointment(Appointment appointment)
         {
-            // Validate model annotations
-            var validationResults = new List<ValidationResult>();
-            var validationContext = new ValidationContext(appointment);
-            if (!Validator.TryValidateObject(appointment, validationContext, validationResults, true))
-            {
-                var errors = string.Join(", ", validationResults.Select(vr => vr.ErrorMessage));
-                throw new ArgumentException($"Model validation failed: {errors}");
-            }
+            ValidationHelper.ValidateModel(appointment);
 
-            // Validate PatientId
-            var patient = _patientRepository.GetPatientById(appointment.PatientId);
-            if (patient == null)
-            {
-                throw new ArgumentException("Invalid PatientId.");
-            }
+            ValidatePatient(appointment.PatientId);
+            ValidatePhysician(appointment.PhysicianId);
 
-            // Validate PhysicianId
-            var physician = _physicianRepository.GetPhysicianById(appointment.PhysicianId);
-            if (physician == null)
-            {
-                throw new ArgumentException("Invalid PhysicianId.");
-            }
+            _appointmentRepository.Add(appointment);
+        }
 
-            _appointmentRepository.AddAppointment(appointment);
+        private void ValidatePatient(int patientId)
+        {
+            if (!_patientRepository.Exists(patientId))
+            {
+                throw new NotFoundException("Patiënt", patientId);
+            }
+        }
+
+        private void ValidatePhysician(int physicianId)
+        {
+            if (!_physicianRepository.Exists(physicianId))
+            {
+                throw new NotFoundException("Arts", physicianId);
+            }
         }
 
         public IEnumerable<Appointment> GetAllAppointments()
         {
-            return _appointmentRepository.GetAllAppointments();
+            return _appointmentRepository.GetAll();
         }
     }
 }

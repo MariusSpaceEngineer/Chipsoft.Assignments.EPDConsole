@@ -1,6 +1,4 @@
-﻿using Chipsoft.Assignments.EPDConsole.Models;
-
-namespace Chipsoft.Assignments.EPDConsole.Services.Interfaces
+﻿namespace Chipsoft.Assignments.EPDConsole.Services.Interfaces
 {
     public interface IAppointmentService
     {
