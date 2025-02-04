@@ -180,7 +180,7 @@ public static class ConsoleHelper
     }
 
     // Checks if a list is empty and displays a message if it is.
-    public static bool CheckIfListIsEmpty<T>(List<T> list, string message)
+    public static bool IsListEmpty<T>(List<T> list, string message)
     {
         if (!list.Any())
         {

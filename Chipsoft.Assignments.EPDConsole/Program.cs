@@ -278,7 +278,7 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
-                if (ConsoleHelper.CheckIfListIsEmpty(physicians, "Er zijn geen artsen om te verwijderen."))
+                if (ConsoleHelper.IsListEmpty(physicians, "Er zijn geen artsen om te verwijderen."))
                 {
                     return;
                 }
@@ -315,7 +315,7 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var patients = _patientService.GetAllPatients().ToList();
 
-                if (ConsoleHelper.CheckIfListIsEmpty(patients, "Er zijn geen patiënten om te verwijderen."))
+                if (ConsoleHelper.IsListEmpty(patients, "Er zijn geen patiënten om te verwijderen."))
                 {
                     return;
                 }
@@ -387,7 +387,7 @@ namespace Chipsoft.Assignments.EPDConsole
         {
             var patients = _patientService.GetAllPatients().ToList();
 
-            if (ConsoleHelper.CheckIfListIsEmpty(patients, "Er zijn geen patiënten om afspraken voor te bekijken."))
+            if (ConsoleHelper.IsListEmpty(patients, "Er zijn geen patiënten om afspraken voor te bekijken."))
             {
                 return;
             }
@@ -417,7 +417,7 @@ namespace Chipsoft.Assignments.EPDConsole
         {
             var physicians = _physicianService.GetAllPhysicians().ToList();
 
-            if (ConsoleHelper.CheckIfListIsEmpty(physicians, "Er zijn geen artsen om afspraken voor te bekijken."))
+            if (ConsoleHelper.IsListEmpty(physicians, "Er zijn geen artsen om afspraken voor te bekijken."))
             {
                 return;
             }
