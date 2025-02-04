@@ -27,6 +27,18 @@ namespace Chipsoft.Assignments.EPDConsole.Services
             _appointmentRepository.Add(appointment);
         }
 
+        public IEnumerable<Appointment> GetAppointmentsByPatientId(int patientId)
+        {
+            ValidatePatient(patientId);
+            return _appointmentRepository.GetByPatientId(patientId);
+        }
+
+        public IEnumerable<Appointment> GetAppointmentsByPhysicianId(int physicianId)
+        {
+            ValidatePhysician(physicianId);
+            return _appointmentRepository.GetByPhysicianId(physicianId);
+        }
+
         private void ValidatePatient(int patientId)
         {
             if (!_patientRepository.Exists(patientId))
@@ -47,5 +59,6 @@ namespace Chipsoft.Assignments.EPDConsole.Services
         {
             return _appointmentRepository.GetAll();
         }
+      
     }
 }

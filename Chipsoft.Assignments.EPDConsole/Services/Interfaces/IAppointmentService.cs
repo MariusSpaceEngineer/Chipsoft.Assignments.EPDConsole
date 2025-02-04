@@ -4,5 +4,7 @@
     {
         void AddAppointment(Appointment appointment);
         IEnumerable<Appointment> GetAllAppointments();
+        IEnumerable<Appointment> GetAppointmentsByPatientId(int patientId);
+        IEnumerable<Appointment> GetAppointmentsByPhysicianId(int physicianId);
     }
 }
