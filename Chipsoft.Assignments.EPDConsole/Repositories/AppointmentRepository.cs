@@ -1,5 +1,4 @@
-﻿using Chipsoft.Assignments.EPDConsole.Models;
-using Chipsoft.Assignments.EPDConsole.Repositories.Interfaces;
+﻿using Chipsoft.Assignments.EPDConsole.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chipsoft.Assignments.EPDConsole.Repositories
@@ -23,6 +22,24 @@ namespace Chipsoft.Assignments.EPDConsole.Repositories
             return _context.Appointments
                             .Include(a => a.Patient)
                             .Include(a => a.Physician)
+                            .ToList();
+        }
+
+        public IEnumerable<Appointment> GetByPatientId(int patientId)
+        {
+            return _context.Appointments
+                            .Include(a => a.Patient)
+                            .Include(a => a.Physician)
+                            .Where(a => a.PatientId == patientId)
+                            .ToList();
+        }
+
+        public IEnumerable<Appointment> GetByPhysicianId(int physicianId)
+        {
+            return _context.Appointments
+                            .Include(a => a.Patient)
+                            .Include(a => a.Physician)
+                            .Where(a => a.PhysicianId == physicianId)
                             .ToList();
         }
     }
