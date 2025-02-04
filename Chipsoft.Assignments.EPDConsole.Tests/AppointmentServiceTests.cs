@@ -94,5 +94,69 @@ namespace Chipsoft.Assignments.EPDConsole.Tests
             Assert.Equal(appointments, result);
             _mockAppointmentRepository.Verify(repo => repo.GetAll(), Times.Once);
         }
+
+        [Fact]
+        public void GetAppointmentsByPatientId_ShouldThrowException_WhenPatientDoesNotExist()
+        {
+            // Arrange
+            int patientId = 1;
+            _mockPatientRepository.Setup(repo => repo.Exists(patientId)).Returns(false);
+
+            // Act & Assert
+            Assert.Throws<NotFoundException>(() => _appointmentService.GetAppointmentsByPatientId(patientId));
+        }
+
+        [Fact]
+        public void GetAppointmentsByPatientId_ShouldReturnAppointments_WhenPatientExists()
+        {
+            // Arrange
+            int patientId = 1;
+            var appointments = new List<Appointment>
+            {
+                new Appointment { PatientId = patientId, PhysicianId = 1, Date = DateTime.Now.AddDays(1), Description = "Checkup" },
+                new Appointment { PatientId = patientId, PhysicianId = 2, Date = DateTime.Now.AddDays(2), Description = "Consultation" }
+            };
+            _mockPatientRepository.Setup(repo => repo.Exists(patientId)).Returns(true);
+            _mockAppointmentRepository.Setup(repo => repo.GetByPatientId(patientId)).Returns(appointments);
+
+            // Act
+            var result = _appointmentService.GetAppointmentsByPatientId(patientId);
+
+            // Assert
+            Assert.Equal(appointments, result);
+            _mockAppointmentRepository.Verify(repo => repo.GetByPatientId(patientId), Times.Once);
+        }
+
+        [Fact]
+        public void GetAppointmentsByPhysicianId_ShouldThrowException_WhenPhysicianDoesNotExist()
+        {
+            // Arrange
+            int physicianId = 1;
+            _mockPhysicianRepository.Setup(repo => repo.Exists(physicianId)).Returns(false);
+
+            // Act & Assert
+            Assert.Throws<NotFoundException>(() => _appointmentService.GetAppointmentsByPhysicianId(physicianId));
+        }
+
+        [Fact]
+        public void GetAppointmentsByPhysicianId_ShouldReturnAppointments_WhenPhysicianExists()
+        {
+            // Arrange
+            int physicianId = 1;
+            var appointments = new List<Appointment>
+            {
+                new Appointment { PatientId = 1, PhysicianId = physicianId, Date = DateTime.Now.AddDays(1), Description = "Checkup" },
+                new Appointment { PatientId = 2, PhysicianId = physicianId, Date = DateTime.Now.AddDays(2), Description = "Consultation" }
+            };
+            _mockPhysicianRepository.Setup(repo => repo.Exists(physicianId)).Returns(true);
+            _mockAppointmentRepository.Setup(repo => repo.GetByPhysicianId(physicianId)).Returns(appointments);
+
+            // Act
+            var result = _appointmentService.GetAppointmentsByPhysicianId(physicianId);
+
+            // Assert
+            Assert.Equal(appointments, result);
+            _mockAppointmentRepository.Verify(repo => repo.GetByPhysicianId(physicianId), Times.Once);
+        }
     }
 }
