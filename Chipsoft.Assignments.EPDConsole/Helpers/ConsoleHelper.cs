@@ -30,7 +30,7 @@ public static class ConsoleHelper
         }
     }
 
-    //Checks to see if the input is not empty and if it is valid according to the validate function.
+    // Checks to see if the input is not empty and if it is valid according to the validate function.
     public static string GetValidatedInput(string prompt, Func<string, bool> validate, string errorMessage = "Ongeldige invoer.")
     {
         while (true)
@@ -66,15 +66,32 @@ public static class ConsoleHelper
                 Console.WriteLine($"{i + 1} - {details}");
             }
 
-            if (int.TryParse(Console.ReadLine(), out int index) && index >= 1 && index <= items.Count)
+            var keyInfo = Console.ReadKey(intercept: true);
+            if (keyInfo.Key == ConsoleKey.Escape)
             {
-                return items[index - 1];
+                // Return default (null) to indicate cancellation.
+                return default;
             }
             else
             {
-                DisplayErrorMessage("Ongeldige invoer. Probeer het opnieuw.");
+                // Combine the first pressed key with the rest of the input.
+                string input = keyInfo.KeyChar + Console.ReadLine();
+                if (IsValidSelection(input, items.Count, out int index))
+                {
+                    return items[index - 1];
+                }
+                else
+                {
+                    DisplayErrorMessage("Ongeldige invoer. Probeer het opnieuw.");
+                }
             }
         }
+    }
+
+    // Validates the selection input.
+    private static bool IsValidSelection(string input, int itemCount, out int index)
+    {
+        return int.TryParse(input, out index) && index >= 1 && index <= itemCount;
     }
 
     public static int GetIntInput(string prompt)

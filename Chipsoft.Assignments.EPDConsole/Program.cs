@@ -182,8 +182,30 @@ namespace Chipsoft.Assignments.EPDConsole
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
                 // Get user selection for patient and physician
-                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
-                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name, p => p.Specialization);
+                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt: (druk op Escape om terug te keren naar het hoofdmenu)",
+                    patients,
+                    p => p.Name,
+                    p => p.Address,
+                    p => p.Email,
+                    p => p.PhoneNumber
+                );
+
+                if (selectedPatient == null)
+                {
+                    return;
+                }
+
+                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts: (druk op Escape om terug te keren naar het hoofdmenu)",
+                    physicians,
+                    p => p.Name,
+                    p => p.Specialization
+                );
+
+                if (selectedPhysician == null)
+                {
+                    return;
+                }
+
                 // Get user date input for appointment
                 DateTime appointmentDate = ConsoleHelper.GetDateInput("Voer de datum van de afspraak in (dd/MM/yyyy HH:mm):", "dd/MM/yyyy HH:mm", true);
                 // Get user input for appointment description (optional)
@@ -199,6 +221,7 @@ namespace Chipsoft.Assignments.EPDConsole
 
                 _appointmentService.AddAppointment(appointment);
                 Console.WriteLine("Afspraak succesvol toegevoegd.");
+                Console.Clear();
             }
             catch (ArgumentException ex)
             {
@@ -218,7 +241,16 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var physicians = _physicianService.GetAllPhysicians().ToList();
 
-                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen:", physicians, p => p.Name, p => p.Specialization);
+                Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts om te verwijderen (druk op Escape om terug te keren naar het hoofdmenu):",
+                    physicians,
+                    p => p.Name,
+                    p => p.Specialization
+                );
+
+                if (selectedPhysician == null)
+                {
+                    return;
+                }
 
                 _physicianService.DeletePhysician(selectedPhysician.Id);
                 Console.WriteLine("Arts succesvol verwijderd.");
@@ -241,7 +273,18 @@ namespace Chipsoft.Assignments.EPDConsole
             {
                 var patients = _patientService.GetAllPatients().ToList();
 
-                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
+                Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt om te verwijderen (druk op Escape om terug te keren naar het hoofdmenu):",
+                    patients,
+                    p => p.Name,
+                    p => p.Address,
+                    p => p.Email,
+                    p => p.PhoneNumber
+                );
+
+                if (selectedPatient == null)
+                {
+                    return;
+                }
 
                 _patientService.DeletePatient(selectedPatient.Id);
                 Console.WriteLine("Patiënt succesvol verwijderd.");
@@ -290,25 +333,47 @@ namespace Chipsoft.Assignments.EPDConsole
                 }
             }
 
-            ConsoleHelper.PromptToContinue();
         }
 
         private void ShowAppointmentsForPatient()
         {
             var patients = _patientService.GetAllPatients().ToList();
 
-            Patient selectedPatient = ConsoleHelper.GetSelectionInput("Kies een patiënt:", patients, p => p.Name, p => p.Address, p => p.Email, p => p.PhoneNumber);
+            Patient selectedPatient = ConsoleHelper.GetSelectionInput(
+                "Kies een patiënt (druk op Escape om terug te keren naar het hoofdmenu):",
+                patients,
+                p => p.Name,
+                p => p.Address,
+                p => p.Email,
+                p => p.PhoneNumber
+            );
+
+            if (selectedPatient == null)
+            {
+                return;
+            }
 
             var appointments = _appointmentService.GetAppointmentsByPatientId(selectedPatient.Id);
 
             ConsoleHelper.ShowAppointmentDetails(appointments, $"Afspraken voor patiënt {selectedPatient.Name}:");
+
+            ConsoleHelper.PromptToContinue();
         }
 
         private void ShowAppointmentsForPhysician()
         {
             var physicians = _physicianService.GetAllPhysicians().ToList();
 
-            Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts:", physicians, p => p.Name, p => p.Specialization);
+            Physician selectedPhysician = ConsoleHelper.GetSelectionInput("Kies een arts (druk op Escape om terug te keren naar het hoofdmenu):",
+                physicians,
+                p => p.Name,
+                p => p.Specialization
+                );
+
+            if (selectedPhysician == null)
+            {
+                return;
+            }
 
             var appointments = _appointmentService.GetAppointmentsByPhysicianId(selectedPhysician.Id);
 
@@ -325,13 +390,14 @@ namespace Chipsoft.Assignments.EPDConsole
                     dbContext.Database.EnsureDeleted();
                     dbContext.Database.EnsureCreated();
                 }
+                Console.Clear();
                 Console.WriteLine("Database succesvol gereset.");
             }
             catch (Exception)
             {
                 Console.WriteLine($"Fout bij het resetten van de database.");
             }
-            
+
             ConsoleHelper.PromptToContinue();
         }
     }
