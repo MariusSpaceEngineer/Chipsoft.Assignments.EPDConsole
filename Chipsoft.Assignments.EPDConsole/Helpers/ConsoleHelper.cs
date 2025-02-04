@@ -34,16 +34,16 @@ public static class ConsoleHelper
 
             if (CheckForCancellation(input))
             {
-                return default;
+                return null;
             }
-            else if (isOptional || !string.IsNullOrWhiteSpace(input))
+
+            if (isOptional || !string.IsNullOrWhiteSpace(input))
             {
                 return input;
             }
-            else
-            {
-                DisplayErrorMessage(WrongInput);
-            }
+
+            DisplayErrorMessage(WrongInput);
+
         }
     }
 

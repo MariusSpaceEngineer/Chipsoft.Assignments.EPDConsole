@@ -258,7 +258,6 @@ namespace Chipsoft.Assignments.EPDConsole
 
                 _appointmentService.AddAppointment(appointment);
                 Console.WriteLine("Afspraak succesvol toegevoegd.");
-                Console.Clear();
             }
             catch (ArgumentException ex)
             {
@@ -350,7 +349,12 @@ namespace Chipsoft.Assignments.EPDConsole
 
         private void ShowAppointments()
         {
-            var appointments = _appointmentService.GetAllAppointments();
+            var appointments = _appointmentService.GetAllAppointments().ToList();
+
+            if (ConsoleHelper.IsListEmpty(appointments, "Er zijn geen afspraken om weer te geven."))
+            {
+                return;
+            }
 
             ConsoleHelper.ShowAppointmentDetails(appointments, "Afspraken:");
 
@@ -406,7 +410,11 @@ namespace Chipsoft.Assignments.EPDConsole
                 return;
             }
 
-            var appointments = _appointmentService.GetAppointmentsByPatientId(selectedPatient.Id);
+            var appointments = _appointmentService.GetAppointmentsByPatientId(selectedPatient.Id).ToList();
+            if (ConsoleHelper.IsListEmpty(appointments, "Er zijn geen afspraken voor deze patiënt."))
+            {
+                return;
+            }
 
             ConsoleHelper.ShowAppointmentDetails(appointments, $"Afspraken voor patiënt {selectedPatient.Name}:");
 
@@ -433,7 +441,11 @@ namespace Chipsoft.Assignments.EPDConsole
                 return;
             }
 
-            var appointments = _appointmentService.GetAppointmentsByPhysicianId(selectedPhysician.Id);
+            var appointments = _appointmentService.GetAppointmentsByPhysicianId(selectedPhysician.Id).ToList();
+            if (ConsoleHelper.IsListEmpty(appointments, "Er zijn geen afspraken voor deze arts."))
+            {
+                return;
+            }
 
             ConsoleHelper.ShowAppointmentDetails(appointments, $"Afspraken voor arts {selectedPhysician.Name}:");
         }
